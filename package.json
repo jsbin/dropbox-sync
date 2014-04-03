@@ -1,5 +1,5 @@
 {
-  "name": "dropbox-sync",
+  "name": "jsbin-dropbox-sync",
   "version": "0.0.0",
   "description": "dropbox sync for jsbin",
   "main": "index.js",
