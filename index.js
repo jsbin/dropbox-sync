@@ -42,14 +42,12 @@ function saveToDropBox (file, name, user) {
 function handleMessages(message) {
   if (message.file) {
     addToDropboxQueue(message);
-  } else
-  if (message.options) {
-    options = message.options;
-    options.delayTime *= 1000;
   }
 }
 
-module.exports = function (socket) {
+module.exports = function (socket, config) {
+  options = config;
+  options.delayTime *= 1000;
   socket.on('message', function (msg) {
     handleMessages(JSON.parse(msg.toString())); 
   });
