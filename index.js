@@ -18,12 +18,10 @@ function addToDropboxQueue (message) {
   if (queue[fileName]) {
     clearTimeout(queue[fileName].timeout);
   }
-  console.log('adding to queue');
   queue[fileName] = saveObject;
 }
 
 function saveToDropBox (file, name, user) {
-  console.log('actually saving it now');
   var client = new Dropbox.Client({
     key: options.id,
     secret: options.secret,
@@ -37,14 +35,12 @@ function saveToDropBox (file, name, user) {
         user: user
       });
     }
-    console.log('saved!');
   });
 
 }
 
 function handleMessages(message) {
   if (message.file) {
-    console.log('recieved bin');
     addToDropboxQueue(message);
   } else
   if (message.options) {
