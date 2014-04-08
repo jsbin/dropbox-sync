@@ -28,10 +28,7 @@ function saveToDropBox (file, name, token) {
 
   client.writeFile(name, file, function (err) {
     if (err) {
-      process.send({
-        error: err,
-        user: user
-      });
+      console.error(err);
     }
   });
 
