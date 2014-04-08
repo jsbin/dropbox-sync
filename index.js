@@ -37,11 +37,11 @@ function saveToDropBox (file, name, token) {
 function handleMessages(message) {
   if (message.file) {
     addToDropboxQueue(message);
-  } else
-  if (message.config) {
-    options = message.config;
-    options.delayTime *= 1000;
   }
 }
 
-module.exports = handleMessages;
+module.exports = function (config) {
+  options = config;
+  options.delayTime *= 1000;
+  return handleMessages;
+};
