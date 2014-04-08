@@ -5,14 +5,14 @@ var options;
 var queue = {};
 
 function addToDropboxQueue (message) {
-  var user = message.user;
+  var token = message.token;
   var fileContent = message.file;
   var fileName = message.fileName;
   var saveObject = {
     file: fileContent,
     token: user.dropbox_token, // jshint ignore:line
     timeout: setTimeout(function(){
-      saveToDropBox(fileContent, fileName, user);
+      saveToDropBox(fileContent, fileName, token);
     }, options.delayTime)
   };
   if (queue[fileName]) {
@@ -21,11 +21,11 @@ function addToDropboxQueue (message) {
   queue[fileName] = saveObject;
 }
 
-function saveToDropBox (file, name, user) {
+function saveToDropBox (file, name, token) {
   var client = new Dropbox.Client({
     key: options.id,
     secret: options.secret,
-    token: user.dropbox_token // jshint ignore:line
+    token: token // jshint ignore:line
   });
 
   client.writeFile(name, file, function (err) {
