@@ -9,8 +9,6 @@ function addToDropboxQueue (message) {
   var fileContent = message.file;
   var fileName = message.fileName;
   var saveObject = {
-    file: fileContent,
-    token: user.dropbox_token, // jshint ignore:line
     timeout: setTimeout(function(){
       saveToDropBox(fileContent, fileName, token);
     }, options.delayTime)
