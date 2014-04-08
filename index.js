@@ -4,30 +4,39 @@ var options;
 
 var queue = {};
 
-function addToDropboxQueue (message) {
-  var token = message.token;
-  var fileContent = message.file;
-  var fileName = message.fileName;
-  var saveObject = {
-    timeout: setTimeout(function(){
-      saveToDropBox(fileContent, fileName, token);
-    }, options.delayTime)
-  };
-  if (queue[fileName]) {
-    clearTimeout(queue[fileName].timeout);
+function addToDropboxQueue(message) {
+  var id = message.fileName;
+  if (!message.attempts) {
+    message.attempts = 0;
   }
-  queue[fileName] = saveObject;
+
+  if (message.attempts > options.maxAttempts) {
+    console.error('Max attempts reached for', id);
+    return;
+  }
+
+  var timeout = setTimeout(function saveToDropBoxWrapper() {
+    saveToDropBox(message);
+    delete queue[id];
+  }, options.delayTime);
+
+  if (queue[id]) {
+    clearTimeout(queue[id]);
+  }
+  queue[id] = timeout;
 }
 
-function saveToDropBox (file, name, token) {
+function saveToDropBox(message) {
   var client = new Dropbox.Client({
     key: options.id,
     secret: options.secret,
-    token: token // jshint ignore:line
+    token: message.token
   });
 
-  client.writeFile(name, file, function (err) {
+  client.writeFile(message.fileName, message.file, function (err) {
     if (err) {
+      message.attempts++;
+      addToDropboxQueue(message);
       console.error(err);
     }
   });
